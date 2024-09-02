@@ -1,4 +1,4 @@
 from booking.booking import Booking
 
-instance = Booking()
-instance.land_first_page()
+with Booking() as bot:
+    bot.land_first_page()
