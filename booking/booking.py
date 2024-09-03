@@ -1,4 +1,4 @@
-from selenium.common import NoSuchElementException
+from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 
 import booking.constants as constants
@@ -25,14 +25,20 @@ class Booking(webdriver.Chrome):
         self.get(constants.BASE_URL)
 
     def change_currency(self, currency=None):
-        # Select currency -- fickle sign-in pop-up
         try:
             no_button = self.find_element(By.CSS_SELECTOR, 'button[aria-label="Dismiss sign-in info."]')
             no_button.click()
-        except NoSuchElementException as e:
+            print("Sign-in info")
+        except NoSuchElementException:
             print("Sign-in info pop-up absent")
+        except StaleElementReferenceException:
+            print("Element went stale")
 
         currency_element = self.find_element(By.CSS_SELECTOR,
                                              'button[aria-label="Prices in U.S. Dollar"]')
-
         currency_element.click()
+
+        selected_currency = self.find_element(By.XPATH,
+                                              f"//div[@data-testid='All currencies']//ul/li//span/div[text()='{currency}']//ancestor::button")
+
+        selected_currency.click()
