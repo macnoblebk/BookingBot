@@ -1,8 +1,7 @@
 from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import booking.constants as constants
+import time
 from selenium import webdriver
 
 WAIT_TIME = 3
@@ -25,7 +24,7 @@ class Booking(webdriver.Chrome):
     def land_first_page(self):
         self.get(constants.BASE_URL)
 
-    def change_currency(self, currency=None):
+    def change_currency(self, currency="USD"):
         try:
             # no_button = self.find_element(By.CSS_SELECTOR, 'button[aria-label="Dismiss sign-in info."]')
             dismiss_sign_in_info = self.find_element(By.XPATH, "//div[@role='dialog']/div/div/div/div/button")
@@ -52,7 +51,6 @@ class Booking(webdriver.Chrome):
         destination_field = self.find_element(By.XPATH, "//div[@data-testid='destination-container']/div/div/div/input")
         destination_field.clear()
         destination_field.send_keys(destination)
-        # wait = WebDriverWait(self, 10)
-        # first_result = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@data-testid='autocomplete-results-options']/ul/li[1]/div")))
+        time.sleep(1)  # Ensure keys are processed
         first_result = self.find_element(By.XPATH, "//div[@data-testid='autocomplete-results-options']/ul/li[1]/div")
         first_result.click()
