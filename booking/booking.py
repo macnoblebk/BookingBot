@@ -1,10 +1,11 @@
 from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import booking.constants as constants
 from selenium import webdriver
 
-WAIT_TIME = 10
+WAIT_TIME = 3
 
 
 class Booking(webdriver.Chrome):
@@ -39,10 +40,19 @@ class Booking(webdriver.Chrome):
         #                                      'button[aria-label="Prices in U.S. Dollar"]')
 
         defualt_to_USD = self.find_element(By.XPATH,
-                                              "//nav[@class='Header_bar']/div/span[1]/button")
+                                           "//nav[@class='Header_bar']/div/span[1]/button")
         defualt_to_USD.click()
 
         selected_currency = self.find_element(By.XPATH,
                                               f"//div[@data-testid='All currencies']//ul/li//span/div[text()='{currency}']//ancestor::button")
 
         selected_currency.click()
+
+    def set_destination(self, destination):
+        destination_field = self.find_element(By.XPATH, "//div[@data-testid='destination-container']/div/div/div/input")
+        destination_field.clear()
+        destination_field.send_keys(destination)
+        # wait = WebDriverWait(self, 10)
+        # first_result = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@data-testid='autocomplete-results-options']/ul/li[1]/div")))
+        first_result = self.find_element(By.XPATH, "//div[@data-testid='autocomplete-results-options']/ul/li[1]/div")
+        first_result.click()
