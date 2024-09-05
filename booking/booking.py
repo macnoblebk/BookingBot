@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 import booking.constants as constants
@@ -62,3 +64,27 @@ class Booking(webdriver.Chrome):
         check_in_date_element.click()
         check_out_date_element = self.find_element(By.XPATH, f"//span[@data-date='{check_out_date}']")
         check_out_date_element.click()
+
+    def format_date(self, date_str):
+        # List of common date formats to attempt parsing
+        possible_formats = [
+            "%Y-%m-%d",
+            "%d-%m-%Y",
+            "%m-%d-%Y",
+            "%m/%d/%Y",
+            "%d/%m/%Y",
+            "%Y/%m/%d"
+        ]
+
+        for date_format in possible_formats:
+            try:
+                # Try to parse the input date with the current format
+                date = datetime.strptime(date_str, date_format)
+                # Return the formatted date string as 'YYYY-MM-DD'
+                return date.strftime("%Y-%m-%d")
+            except ValueError:
+                # If the format doesn't match, continue trying other formats
+                continue
+
+        raise ValueError(f"Incorrect date format: '{date_str}'. Supported formats are: YYYY-MM-DD, DD-MM-YYYY, "
+                         f"MM/DD/YYYY, etc.")
