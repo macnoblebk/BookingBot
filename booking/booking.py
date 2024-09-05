@@ -48,12 +48,17 @@ class Booking(webdriver.Chrome):
 
         selected_currency.click()
 
-
-
     def set_destination(self, destination):
         destination_field = self.find_element(By.XPATH, "//div[@data-testid='destination-container']/div/div/div/input")
         destination_field.clear()
         destination_field.send_keys(destination)
-        time.sleep(1)  # Ensure keys are processed
+        time.sleep(1)  # Ensure search result is successful
         first_result = self.find_element(By.XPATH, "//div[@data-testid='autocomplete-results-options']/ul/li[1]/div")
         first_result.click()
+
+    def select_dates(self, check_in_date, check_out_date):
+        check_in_date_element = self.find_element(By.XPATH, f"//span[@data-date='{check_in_date}']")
+        # check_in_date_element = self.find_element(By.CSS_SELECTOR, f"span[data-date='{check_in_date}']")
+        check_in_date_element.click()
+        check_out_date_element = self.find_element(By.XPATH, f"//span[@data-date='{check_out_date}']")
+        check_out_date_element.click()
