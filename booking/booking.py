@@ -24,7 +24,7 @@ class Booking(webdriver.Chrome):
     def land_first_page(self):
         self.get(constants.BASE_URL)
 
-    def change_currency(self, currency="USD"):
+    def close_sign_in_info(self):
         try:
             # no_button = self.find_element(By.CSS_SELECTOR, 'button[aria-label="Dismiss sign-in info."]')
             dismiss_sign_in_info = self.find_element(By.XPATH, "//div[@role='dialog']/div/div/div/div/button")
@@ -35,6 +35,7 @@ class Booking(webdriver.Chrome):
         except StaleElementReferenceException:
             print("Element went stale")
 
+    def change_currency(self, currency="USD"):
         # currency_element = self.find_element(By.CSS_SELECTOR,
         #                                      'button[aria-label="Prices in U.S. Dollar"]')
 
@@ -46,6 +47,8 @@ class Booking(webdriver.Chrome):
                                               f"//div[@data-testid='All currencies']//ul/li//span/div[text()='{currency}']//ancestor::button")
 
         selected_currency.click()
+
+
 
     def set_destination(self, destination):
         destination_field = self.find_element(By.XPATH, "//div[@data-testid='destination-container']/div/div/div/input")
