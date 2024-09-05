@@ -1,12 +1,12 @@
-from datetime import datetime
-
+from selenium import webdriver
 from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 import booking.constants as constants
+from datetime import datetime, timedelta
 import time
-from selenium import webdriver
 
 WAIT_TIME = 3
+SLEEP_TIME = 1
 
 
 class Booking(webdriver.Chrome):
@@ -54,15 +54,24 @@ class Booking(webdriver.Chrome):
         destination_field = self.find_element(By.XPATH, "//div[@data-testid='destination-container']/div/div/div/input")
         destination_field.clear()
         destination_field.send_keys(destination)
-        time.sleep(1)  # Ensure search result is successful
+        time.sleep(SLEEP_TIME)  # Ensure search result is successful
         first_result = self.find_element(By.XPATH, "//div[@data-testid='autocomplete-results-options']/ul/li[1]/div")
         first_result.click()
 
-    def select_dates(self, check_in_date, check_out_date):
-        check_in_date_element = self.find_element(By.XPATH, f"//span[@data-date='{check_in_date}']")
+    def select_dates(self, check_in_date=None, check_out_date=None):
+        if check_in_date is None:
+            check_in_date = datetime.today().strftime("%Y-%m-%d")
+
+        if check_out_date is None:
+            check_out_date = (datetime.today() + timedelta(days=3)).strftime("%Y-%m-%d")
+
+        formatted_check_in_date = self.format_date(check_in_date)
+        formatted_check_out_date = self.format_date(check_out_date)
+
+        check_in_date_element = self.find_element(By.XPATH, f"//span[@data-date='{formatted_check_in_date}']")
         # check_in_date_element = self.find_element(By.CSS_SELECTOR, f"span[data-date='{check_in_date}']")
         check_in_date_element.click()
-        check_out_date_element = self.find_element(By.XPATH, f"//span[@data-date='{check_out_date}']")
+        check_out_date_element = self.find_element(By.XPATH, f"//span[@data-date='{formatted_check_out_date}']")
         check_out_date_element.click()
 
     def format_date(self, date_str):
