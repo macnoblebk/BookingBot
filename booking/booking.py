@@ -5,8 +5,8 @@ import booking.constants as constants
 from datetime import datetime, timedelta
 import time
 
-WAIT_TIME = 3
-SLEEP_TIME = 1
+WAIT_DURATION = 3
+SLEEP_DURATION = 1
 
 
 class Booking(webdriver.Chrome):
@@ -16,7 +16,7 @@ class Booking(webdriver.Chrome):
         options.add_experimental_option('detach', True)
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         super(Booking, self).__init__(options=options)
-        self.implicitly_wait(WAIT_TIME)
+        self.implicitly_wait(WAIT_DURATION)
         self.maximize_window()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -54,7 +54,7 @@ class Booking(webdriver.Chrome):
         destination_field = self.find_element(By.XPATH, "//div[@data-testid='destination-container']/div/div/div/input")
         destination_field.clear()
         destination_field.send_keys(destination)
-        time.sleep(SLEEP_TIME)  # Ensure search result is successful
+        time.sleep(SLEEP_DURATION)  # Ensure search result is successful
         first_result = self.find_element(By.XPATH, "//div[@data-testid='autocomplete-results-options']/ul/li[1]/div")
         first_result.click()
 
@@ -75,15 +75,7 @@ class Booking(webdriver.Chrome):
         check_out_date_element.click()
 
     def format_date(self, date_str):
-        # List of common date formats to attempt parsing
-        possible_formats = [
-            "%Y-%m-%d",
-            "%d-%m-%Y",
-            "%m-%d-%Y",
-            "%m/%d/%Y",
-            "%d/%m/%Y",
-            "%Y/%m/%d"
-        ]
+        possible_formats = ["%Y-%m-%d", "%d-%m-%Y", "%m-%d-%Y", "%m/%d/%Y", "%d/%m/%Y", "%Y/%m/%d"]
 
         for date_format in possible_formats:
             try:
@@ -97,3 +89,23 @@ class Booking(webdriver.Chrome):
 
         raise ValueError(f"Incorrect date format: '{date_str}'. Supported formats are: YYYY-MM-DD, DD-MM-YYYY, "
                          f"MM/DD/YYYY, etc.")
+
+    def select_party_size(self, count=1):
+        selection_element = self.find_element(By.XPATH, '//button[@data-testid="occupancy-config"]')
+        selection_element.click()
+
+        while True:
+            decrease_adult_count_element = self.find_element(By.XPATH,
+                                                             '//div[@data-testid="occupancy-popup"]/div[1]/div[1]/div[2]/button[1]')
+            decrease_adult_count_element.click()
+            adult_value_element = self.find_element(By.XPATH, '//input[@id="group_adults"]')
+            adult_count = int(adult_value_element.get_attribute("value"))
+
+            if adult_count == 1:
+                break
+
+        increase_adult_element = self.find_element(By.XPATH,
+                                                   '//div[@data-testid="occupancy-popup"]/div[1]/div[1]/div[2]/button[2]')
+
+        for _ in range(count - 1):
+            increase_adult_element.click()
