@@ -6,4 +6,4 @@ with Booking() as bot:
     # bot.change_currency()  # StaleElementReferenceException if commented
     bot.set_destination("New York")
     bot.select_dates()
-    bot.select_party_size(10)
+    bot.select_party_size(0)

@@ -7,6 +7,7 @@ import time
 
 WAIT_DURATION = 3
 SLEEP_DURATION = 1
+MIN_ADULT_COUNT = 1
 
 
 class Booking(webdriver.Chrome):
@@ -91,21 +92,24 @@ class Booking(webdriver.Chrome):
                          f"MM/DD/YYYY, etc.")
 
     def select_party_size(self, count=1):
+        if count < MIN_ADULT_COUNT:
+            raise ValueError(f"Count must be at least: '{MIN_ADULT_COUNT}'")
+
         selection_element = self.find_element(By.XPATH, '//button[@data-testid="occupancy-config"]')
         selection_element.click()
 
-        while True:
-            decrease_adult_count_element = self.find_element(By.XPATH,
-                                                             '//div[@data-testid="occupancy-popup"]/div[1]/div[1]/div[2]/button[1]')
-            decrease_adult_count_element.click()
-            adult_value_element = self.find_element(By.XPATH, '//input[@id="group_adults"]')
-            adult_count = int(adult_value_element.get_attribute("value"))
-
-            if adult_count == 1:
-                break
-
         increase_adult_element = self.find_element(By.XPATH,
                                                    '//div[@data-testid="occupancy-popup"]/div[1]/div[1]/div[2]/button[2]')
+        decrease_adult_count_element = self.find_element(By.XPATH,
+                                                         '//div[@data-testid="occupancy-popup"]/div[1]/div[1]/div[2]/button[1]')
 
-        for _ in range(count - 1):
-            increase_adult_element.click()
+        adult_value_element = self.find_element(By.XPATH, '//input[@id="group_adults"]')
+        adult_count = int(adult_value_element.get_attribute("value"))
+
+        while adult_count != count:
+            if adult_count < count:
+                increase_adult_element.click()
+            elif adult_count > count and adult_count > MIN_ADULT_COUNT:
+                decrease_adult_count_element.click()
+
+            adult_count = int(adult_value_element.get_attribute("value"))
