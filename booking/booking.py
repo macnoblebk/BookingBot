@@ -113,3 +113,7 @@ class Booking(webdriver.Chrome):
                 decrease_adult_count_element.click()
 
             adult_count = int(adult_value_element.get_attribute("value"))
+
+    def click_search(self):
+        search_button = self.find_element(By.XPATH, '//div[@data-testid="searchbox-layout-wide"]/div[4]//button')
+        search_button.click()
