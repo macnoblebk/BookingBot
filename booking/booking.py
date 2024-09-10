@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 import booking.constants as constants
+from booking.filter import Filter
 from datetime import datetime, timedelta
 import time
 
@@ -117,3 +118,7 @@ class Booking(webdriver.Chrome):
     def click_search(self):
         search_button = self.find_element(By.XPATH, '//div[@data-testid="searchbox-layout-wide"]/div[4]//button')
         search_button.click()
+
+    def apply_filter(self):
+        search_filter = Filter(driver=self)
+        search_filter.apply_property_rating(star_value=5)
