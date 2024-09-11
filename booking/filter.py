@@ -13,15 +13,12 @@ class Filter:
         self.driver = driver
 
     def apply_property_rating(self, star_value):
-        property_rating_box = self.driver.find_element(By.XPATH, '//div[@data-testid="filters-group"]')
-        property_rating_child_elements = property_rating_box.find_elements(By.XPATH,
-                                                                           '//div[contains(@data-filters-item, "class:class")]')
+        property_rating_element = self.driver.find_element(By.XPATH,f'//div[@data-filters-item="class:class={star_value}"]')
+        property_rating_element.click()
+        # self.driver.execute_script("arguments[0].click();", property_rating_element)
 
-        for property_rating_element in property_rating_child_elements:
-            rating_text = property_rating_element.text.strip()
-            print(rating_text)
-            rating_parts = rating_text.split()
-            if rating_parts and rating_parts[0].isdigit() and int(rating_parts[0]) == star_value:
-                self.driver.find_element(By.XPATH, '//input[@name="class=5"]').click()
+
+
+
 
 
