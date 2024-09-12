@@ -12,7 +12,7 @@ class Filter:
         property_rating_elements = property_rating_box.find_elements(By.XPATH,
                                                                      '//div[contains(@data-filters-item, "class:class=")]')
 
-        # TODO: Fix bug where checkboxes are toggled
+        # TODO: Fix bug where checkboxes are toggled between runs
         for star_value in star_values:
             for property_rating_element in property_rating_elements:
                 rating_text = property_rating_element.text

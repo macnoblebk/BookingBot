@@ -1,1 +1,4 @@
 BASE_URL = "https://booking.com"
+WAIT_DURATION = 3
+SLEEP_DURATION = 1
+MIN_ADULT_COUNT = 1
