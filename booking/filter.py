@@ -1,12 +1,6 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
-ONE_STAR = 1
-TWO_STARS = 2
-THREE_STARS = 3
-FOUR_STARS = 4
-FIVE_STARS = 5
-
 
 class Filter:
     def __init__(self, driver: WebDriver):

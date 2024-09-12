@@ -9,3 +9,5 @@ with Booking() as bot:
     bot.select_party_size(5)
     bot.click_search()
     bot.apply_filter()
+
+
