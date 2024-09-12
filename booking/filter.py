@@ -12,13 +12,20 @@ class Filter:
     def __init__(self, driver: WebDriver):
         self.driver = driver
 
-    def apply_property_rating(self, star_value):
-        property_rating_element = self.driver.find_element(By.XPATH,f'//div[@data-filters-item="class:class={star_value}"]')
-        property_rating_element.click()
-        # self.driver.execute_script("arguments[0].click();", property_rating_element)
+    def apply_property_rating(self, *star_values):
+        property_rating_box = self.driver.find_element(By.XPATH, '//div[@data-testid="filters-group"]')
 
+        property_rating_elements = property_rating_box.find_elements(By.XPATH,
+                                                                     '//div[contains(@data-filters-item, "class:class=")]')
 
-
-
-
+        for star_value in star_values:
+            for property_rating_element in property_rating_elements:
+                rating_text = property_rating_element.text
+                # print(rating_text)
+                rating_parts = rating_text.split()
+                # print(rating_parts)
+                if rating_parts and rating_parts[0].isdigit() and int(rating_parts[0]) == star_value:
+                    checkbox = property_rating_element.find_element(By.XPATH, './/input[@type="checkbox"]')
+                    if not checkbox.is_selected():
+                        checkbox.click()
 
