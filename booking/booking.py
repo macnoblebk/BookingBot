@@ -46,21 +46,23 @@ class Booking(webdriver.Chrome):
         try:
             dismiss_sign_in_info = self.find_element(By.XPATH, "//div[@role='dialog']/div/div/div/div/button")
             dismiss_sign_in_info.click()
-            print("Sign-in info")
         except NoSuchElementException:
             print("No Sign-in info")
 
-    def change_currency(self, currency="USD"):
-        defualt_to_USD = self.find_element(By.XPATH,
+    def change_currency(self, currency=None):
+        if currency is None:
+            currency = "USD"
+
+        default_to_USD = self.find_element(By.XPATH,
                                            "//nav[@class='Header_bar']/div/span[1]/button")
-        defualt_to_USD.click()
+        default_to_USD.click()
 
         selected_currency = self.find_element(By.XPATH,
                                               f"//div[@data-testid='All currencies']//ul/li//span/div[text()='{currency}']//ancestor::button")
-
         selected_currency.click()
 
     def set_destination(self, destination):
+        time.sleep(constants.SLEEP_DURATION)
         destination_field = self.find_element(By.XPATH, "//div[@data-testid='destination-container']/div/div/div/input")
         destination_field.clear()
         destination_field.send_keys(destination)
@@ -112,5 +114,5 @@ class Booking(webdriver.Chrome):
 
     def apply_filter(self):
         search_filter = Filter(driver=self)
-        search_filter.apply_property_rating(4, 5)
+        search_filter.apply_property_rating(3, 4, 5)
         search_filter.sort_price_ascending()
