@@ -28,6 +28,7 @@ class Booking(webdriver.Chrome):
     def __init__(self, teardown=False):
         self.teardown = teardown
         options = webdriver.ChromeOptions()
+        options.binary_location = constants.CHROME_BIN_PATH
         options.add_experimental_option('detach', True)
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         super(Booking, self).__init__(options=options)
