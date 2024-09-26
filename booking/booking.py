@@ -114,5 +114,5 @@ class Booking(webdriver.Chrome):
 
     def apply_filter(self):
         search_filter = Filter(driver=self)
-        search_filter.apply_property_rating(3, 4, 5)
-        search_filter.sort_price_ascending()
+        search_filter.apply_property_rating(star_value=5)
+        # search_filter.sort_price_ascending()
